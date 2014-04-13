@@ -1,6 +1,7 @@
 import com.sun.messaging.ConnectionConfiguration;
 import com.sun.messaging.ConnectionFactory;
 
+import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -32,6 +33,18 @@ public class QueueSender {
             connection.start();
             session=connection.createQueueSession(false,Session.AUTO_ACKNOWLEDGE);
             Queue ioQueue=session.createQueue(queueName);
+            queueSender=session.createProducer(ioQueue);
+        }
+        catch(JMSException e) {
+            System.out.println("Error: "+e.getMessage());
+        }
+    }
+
+    QueueSender(javax.jms.ConnectionFactory factory, Queue ioQueue) {
+        try {
+            Connection connection=factory.createConnection("admin","admin");
+            connection.start();
+            Session session=connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
             queueSender=session.createProducer(ioQueue);
         }
         catch(JMSException e) {

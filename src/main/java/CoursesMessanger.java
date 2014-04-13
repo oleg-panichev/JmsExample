@@ -1,5 +1,4 @@
-import com.sun.messaging.ConnectionFactory;
-
+import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -22,31 +21,34 @@ public class CoursesMessanger {
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.enterprise.naming.SerialInitContextFactory");
         properties.put("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
         properties.put("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-        properties.put("org.omg.CORBA.ORBInitialHost", "192.168.1.110");
+        properties.put("org.omg.CORBA.ORBInitialHost", "localhost");
         properties.put("org.omg.CORBA.ORBInitialPort", "3700");
 
-        InitialContext ic=new InitialContext(properties);
+//        InitialContext ic=new InitialContext(properties);
 
 //        // If Java client is running inside Java EE server that runs the naming service
 //        InitialContext ic=new InitialContext();
 
-        Context jndiContext=new InitialContext();
-        ConnectionFactory factory=(ConnectionFactory)jndiContext.lookup("MyTestConnectionFactory");
+        Context jndiContext=new InitialContext(properties);
+        ConnectionFactory factory=(ConnectionFactory)jndiContext.lookup("MyConnectionFactory");
         Queue ioQueue=(Queue)jndiContext.lookup("MyJMSTestQueue");
-
 
         String command="";
         String mqAddressList="mq://192.168.7.157:7676";
         String queueName1="OT";
-        QueueSender qs1=new QueueSender(mqAddressList,queueName1);
+//        QueueSender qs1=new QueueSender(mqAddressList,queueName1);
+        QueueSender qs1=new QueueSender(factory,ioQueue);
         String queueName2="TO";
-        QueueReceiver qs2=new QueueReceiver(mqAddressList,queueName2);
+//        QueueReceiver qs2=new QueueReceiver(mqAddressList,queueName2);
+        QueueReceiver qs2=new QueueReceiver(factory,ioQueue);
         BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
         command = bufferRead.readLine();
         while(!command.equals("/exit")) {
-            if (command.startsWith(queueName1)) {
-                qs1.sendMessage(command.substring(queueName1.length()));
-            }
+//            if (command.startsWith(queueName1)) {
+            if (command.length()>0)
+                qs1.sendMessage(command);
+            command="";
+//            }
             command = bufferRead.readLine();
         }
     }

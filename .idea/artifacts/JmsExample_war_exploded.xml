@@ -8,7 +8,7 @@
           <element id="module-output" name="JmsExample" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: org.glassfish.extras:glassfish-embedded-all:3.1.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.main.extras:glassfish-embedded-all:4.0" />
         </element>
       </element>
     </root>
