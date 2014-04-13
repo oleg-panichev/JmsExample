@@ -81,6 +81,9 @@ public class QueueReceiver { //implements javax.jms.MessageListener {
         catch(JMSException e) {
             msgText="Error while consuming a message: "+e.getMessage();
         }
+        catch(NullPointerException e) {
+            msgText="No messages!";
+        }
         if(msgText.length()==0) {
             msgText="No messages!";
         }

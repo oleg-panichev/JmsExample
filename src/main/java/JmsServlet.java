@@ -1,3 +1,6 @@
+import ejbbeans.HelloWorld;
+
+import javax.ejb.EJB;
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 import javax.naming.Context;
@@ -18,6 +21,9 @@ public class JmsServlet extends HttpServlet {
     private ConnectionFactory factory;
     private Queue ioQueue;
     private QueueReceiver qs;
+    @EJB
+    HelloWorld hw;
+
     @Override
     public void init() throws ServletException {
         try {
@@ -36,6 +42,7 @@ public class JmsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out=response.getWriter();
-        out.print(qs.receiveMessages());
+        out.println(hw.sayHello());
+        out.println(qs.receiveMessages());
     }
 }
